@@ -14,23 +14,25 @@ def divide(x, y):
 print("\t\t\tWelcome to our basic calculator.\n\tYou can use it to perform just one or multiple operations:\n"
       "\t- Add(+)\n\t- Subtract(-)\n\t- Multiply(*)\n\t- Divide(/)\n")
 
-chosen = input("\tPlease select your first number and the symbol of your chosen operation,\n"
-                   "\t\tseparated with a space: ").split()
-first_num = float(chosen[0])
-operator = chosen[1]
-
-while operator not in ('-', '+', '/', '*'):
-    print("\tInvalid operator, please select a new one!")
-    operator = input("\t\t -> ")
+first_num = float(input("\tPlease select your first number: "))
+initial_num = first_num
 
 numbers = []
-numbers.append(first_num)
+operators = []
 
 while True:
-    second_num = float(input("Select your next number or '0' to finish: "))
-    if second_num == 0:
+    chosen_2 = input("\t\tChoose operator and number, separated with a space,\n"
+                   "\t\t\tor '0' to finish -> ").split()
+    operator = chosen_2[0]
+    if operator == '0':
         break
+    second_num = float(chosen_2[1])
+    if operator not in ('-', '+', '/', '*'):
+        print("\tInvalid operator, please select a new one!")
+        continue
+
     numbers.append(second_num)
+    operators.append(operator)
 
     if operator == '+':
         add(first_num, second_num)
@@ -48,6 +50,8 @@ while True:
         divide(first_num, second_num)
         first_num /= second_num
 
-print(f"{f' {operator} '.join(map(str, numbers))} is -> {first_num}")
-
-# this is test comment
+print(initial_num, end=' ')
+result = zip(operators, numbers)
+for res in result:
+    print(*res, end=' ')
+print(f"-> {first_num}")
