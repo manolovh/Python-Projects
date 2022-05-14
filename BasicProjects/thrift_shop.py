@@ -1,37 +1,39 @@
-class ThriftShop:
-    _checkout_items = []
-    _checkout_prices = []
-    _item_quantity = 0
-    def __init__(self, price: float, color):
-        self.price = price
-        self.color = color
+class Clothes:
+    _available_items = {'Shirt': 35,
+                        'T-Shirt': 25,
+                        'Jacket': 85,
+                        'Scarf': 15,
+                        'Hat': 12,
+                        'Trousers': 29,
+                        'Jeans': 59,
+                        'Socks(Pair)': 3,
+                        }
+    shopping_items = []
+    shopping_prices = []
 
+    def __init__(self, customer):
+        self.customer = customer
 
-class Shoes(ThriftShop):
-    def __init__(self, size: float, price: float, color):
-        self.size = size
+    def buy(self, item):
+        self.item = item
+        # buy items and add them to the cart so the final price and their names can be
+        # visualized when then program finishes
+        Clothes.shopping_items.append(self.item)
+        price = Clothes._available_items[self.item]
+        Clothes.shopping_prices.append(price)
 
-        ThriftShop.__init__(self, price, color)
+    def sell(self):
+        # use the sell option to sell an item to the store for 20% less than the actual price
+        # and add it to _available_items
+        pass
 
+    def total(self):
+        print("Your items -> ", end='')
+        print(', '.join(Clothes.shopping_items))
+        print(f'Total price -> {sum(Clothes.shopping_prices)}')
 
-class Shirts(ThriftShop):
-    def __init__(self, size: str, price: float, color):
-        self.size = size
-
-        ThriftShop.__init__(self, price, color)
-
-
-class Furniture(ThriftShop):
-    def __init__(self, material, room_type, price: float):
-        self.material = material
-        self.room_type = room_type
-
-        ThriftShop.__init__(self, price)
-
-
-class Books(ThriftShop):
-    pass
-
-
-class SportingEquipment(ThriftShop):
-    pass
+Gosho = Clothes('Gosho')
+Gosho.buy('T-Shirt')
+Gosho.buy('Shirt')
+Gosho.buy('Scarf')
+Gosho.total()
