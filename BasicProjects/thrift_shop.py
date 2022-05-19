@@ -6,34 +6,55 @@ class Clothes:
                         'Hat': 12,
                         'Trousers': 29,
                         'Jeans': 59,
-                        'Socks(Pair)': 3,
+                        'Socks': 3,
                         }
     shopping_items = []
-    shopping_prices = []
+    total_price = 0
 
     def __init__(self, customer):
         self.customer = customer
+        items = [item for item in Clothes._available_items.keys()]
+        print(f"\tHello, {self.customer}!\n"
+              f"\tHere are the products our store offers: ")
+        for item in items:
+            print(f'- {item}')
+        print(f"\tPlease choose 'Buy /item/' to add items to your cart, 'Return /item/' to return an item to the shop\n\t"
+              f" or 'Total' to exit and take your receipt: ")
 
     def buy(self, item):
-        self.item = item
-        # buy items and add them to the cart so the final price and their names can be
-        # visualized when then program finishes
-        Clothes.shopping_items.append(self.item)
-        price = Clothes._available_items[self.item]
-        Clothes.shopping_prices.append(price)
+        # Buy items and add them, and their total price to the cart
+        Clothes.shopping_items.append(item)
+        price = Clothes._available_items[item]
+        Clothes.total_price += price
 
-    def sell(self):
-        # use the sell option to sell an item to the store for 20% less than the actual price
-        # and add it to _available_items
-        pass
+    def return_item(self, item):
+        # Receive an item from the customer and pay pack the money
+        Clothes.total_price -= Clothes._available_items[item]
 
     def total(self):
-        print("Your items -> ", end='')
-        print(', '.join(Clothes.shopping_items))
-        print(f'Total price -> {sum(Clothes.shopping_prices)}')
+        # If there are items in the cart - visualize them, and display the money they have to give or receive
+        if Clothes.shopping_items:
+            print("Your items -> ", end='')
+            print(', '.join(Clothes.shopping_items))
+        if Clothes.total_price >= 0:
+            print(f'Total price -> {Clothes.total_price}$')
+        else:
+            print(f'The shop owes you {abs(Clothes.total_price)}$')
 
-Gosho = Clothes('Gosho')
-Gosho.buy('T-Shirt')
-Gosho.buy('Shirt')
-Gosho.buy('Scarf')
-Gosho.total()
+
+start = input("Please enter you name: ")
+user = Clothes(start)
+
+while True:
+    choice = input().split()
+    action = choice[0]
+    if action == 'Total':
+        user.total()
+        break
+    item = choice[1]
+    if action == 'Buy':
+        user.buy(item)
+        print(f'Current items in the cart: {Clothes.shopping_items}')
+    elif action == 'Return':
+        user.return_item(item)
+        print(f"Choose your next operation: ")
