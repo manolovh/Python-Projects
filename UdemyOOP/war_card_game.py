@@ -118,7 +118,6 @@ class Player:
 
 
 # TEST
-
 deck1 = Deck(True)
 deck1.build()
 deck1.shuffle()
