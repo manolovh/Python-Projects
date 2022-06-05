@@ -20,42 +20,7 @@ class Suit:
         return self._symbol
 
 
-class Card:
-    SPECIAL_VALUES = {11: 'Jack',
-                      12: 'Queen',
-                      13: 'King',
-                      14: 'Ace', }
-
-    def __init__(self, suit, value):
-        self._suit = Suit(suit)
-        self._value = value
-
-    @property
-    def suit(self):
-        return self._suit.description
-
-    @property
-    def value(self):
-        return self._value
-
-    def is_special(self):
-        # the same as -> return self._value >= 11
-        return True if self.value >= 11 else False
-
-    def show(self):
-        card_value = self._value
-        card_suit = self._suit.description.capitalize()
-        card_symbol = self._suit.symbol
-
-        if self.is_special():
-            card_description = Card.SPECIAL_VALUES[card_value]
-            print(f"{card_description} of {card_suit} {card_symbol}")
-        else:
-            print(f"{card_value} of {card_suit} {card_symbol}")
-
-
 class Deck:
-
     SUITS = ('clubs', 'diamonds', 'hearts', 'spades')
 
     def __init__(self, is_empty=False):
@@ -71,7 +36,7 @@ class Deck:
     def build(self):
         for suit in Deck.SUITS:
             for value in range(2, 15):
-                self._cards.append(Card(suit, value))
+                self._cards.append(Card(Suit(suit), value))
 
     def show(self):
         for card in self._cards:
@@ -84,12 +49,40 @@ class Deck:
         if self._cards:
             return self._cards.pop()
         else:
-            # when specifying the first value to be returned,
-            # you should address the opposite as well, in this case - None
             return None
 
     def add(self, card):
         self._cards.insert(0, card)
+
+
+class Card:
+    SPECIAL_CARDS = {11: "Jack", 12: "Queen", 13: "King", 14: "Ace"}
+
+    def __init__(self, suit, value):
+        self._suit = suit
+        self._value = value
+
+    @property
+    def suit(self):
+        return self._suit
+
+    @property
+    def value(self):
+        return self._value
+
+    def show(self):
+        card_value = self._value
+        card_suit = self._suit.description.capitalize()
+        suit_symbol = self._suit.symbol
+
+        if self.is_special():
+            card_description = Card.SPECIAL_CARDS[card_value]
+            print(f"{card_description} of {card_suit} {suit_symbol}")
+        else:
+            print(f"{card_value} of {card_suit} {suit_symbol}")
+
+    def is_special(self):
+        return self._value >= 11
 
 
 class Player:
@@ -108,8 +101,7 @@ class Player:
         return self._deck
 
     def has_empty_deck(self):
-        # same as -> return self._deck.size == 0
-        return True if self._deck.size == 0 else False
+        return self._deck.size == 0
 
     def draw_card(self):
         if not self.has_empty_deck():
@@ -122,7 +114,6 @@ class Player:
 
 
 class WarCardGame:
-
     PLAYER = 0
     COMPUTER = 1
     TIE = 2
@@ -234,7 +225,19 @@ class WarCardGame:
 
 
 # TEST
-deck1 = Deck(True)
-deck1.build()
-deck1.shuffle()
-deck1.show()
+player = Player('Harry', Deck(is_empty=True))
+computer = Player('Computer', Deck(is_empty=True), is_computer=True)
+deck = Deck()
+
+game = WarCardGame(player, computer, deck)
+
+game.print_welcome_message()
+
+while not game.check_game_over():
+    game.start_battle()
+    game.print_stats()
+
+    answer = input('\nAre you ready for the next round?'
+                   '\nPress Enter to continue, or X to stop')
+    if answer.lower() == 'x':
+        break
