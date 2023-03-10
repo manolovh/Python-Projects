@@ -1,2 +1,2 @@
 # Python-Projects
-Python projects I've been working on
+Python projects from practise.
